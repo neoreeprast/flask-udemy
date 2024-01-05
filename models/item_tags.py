@@ -4,13 +4,8 @@ class ItemTags(db.Model):
     __tablename__ = "item_tags"
 
     id = db.Column(db.Integer, primary_key=True)
-    item_id = db.Column(db.Integer, db.ForeignKey("items.id"), unique=False, nullable=False)
-    tag_id = db.Column(db.Integer, db.ForeignKey("tags.id"), unique=False, nullable=False)
-
-    __table_args__ = (
-        db.ForeignKeyConstraint([item_id], ["items.id"], ondelete="CASCADE"),
-        db.ForeignKeyConstraint([tag_id], ["tags.id"], ondelete="CASCADE"),
-    )
+    item_id = db.Column(db.Integer, db.ForeignKey("items.id", ondelete="CASCADE", name="item_tags_items_fk"), unique=False, nullable=False)
+    tag_id = db.Column(db.Integer, db.ForeignKey("tags.id",ondelete="CASCADE", name="item_tags_tags_fk"), unique=False, nullable=False)
 
     @classmethod
     def find_all(cls, item_id):

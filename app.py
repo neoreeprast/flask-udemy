@@ -9,6 +9,7 @@ from resources.store import blp as StoreBlueprint
 from resources.tag import blp as TagBlueprint
 from resources.user import blp as UserBlueprint
 from db import db
+from flask_migrate import Migrate
 
 def setup_jwt(app):
     jwt = JWTManager(app)
@@ -46,13 +47,12 @@ def create_app(db_url=None):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
 
+    migrate = Migrate(app, db)
+
     api = Api(app)
 
     app.config["JWT_SECRET_KEY"] = "jono"
     setup_jwt(app)
-
-    with app.app_context():
-        db.create_all()
 
     api.register_blueprint(ItemBlueprint)
     api.register_blueprint(StoreBlueprint)
