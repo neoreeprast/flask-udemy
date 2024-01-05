@@ -1,4 +1,5 @@
 import bcrypt
+import psycopg2
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from models import UserModel
@@ -22,7 +23,8 @@ class User(MethodView):
             abort(400, message="user already exists")
 
         password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-        user = UserModel(username=username, password_hash=password_hash)
+        encoded_password = password_hash.decode("utf-8")
+        user = UserModel(username=username, password_hash=encoded_password)
         try:
             user = user.save_to_db()
         except SQLAlchemyError:
@@ -37,7 +39,7 @@ class UserLogin(MethodView):
         username = user_data["username"].lower()
         password = user_data["password"]
         user = UserModel.find_by_username(username)
-        if user and bcrypt.checkpw(password.encode("utf-8"), user.password_hash):
+        if user and bcrypt.checkpw(password.encode("utf-8"), user.password_hash.encode("utf-8")):
             access_token = create_access_token(identity=user.id, fresh=True)
             refresh_token = create_refresh_token(identity=user.id)
             decoded_token = decode_token(refresh_token)

@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: flaskUser
+      POSTGRES_PASSWORD: flaskPassword
+      POSTGRES_DB: flaskUdemyDb
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - 54324:5432

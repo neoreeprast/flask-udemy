@@ -10,6 +10,7 @@ from resources.tag import blp as TagBlueprint
 from resources.user import blp as UserBlueprint
 from db import db
 from flask_migrate import Migrate
+from dotenv import load_dotenv
 
 def setup_jwt(app):
     jwt = JWTManager(app)
@@ -36,6 +37,7 @@ def setup_jwt(app):
 
 def create_app(db_url=None):
     app = Flask(__name__)
+    load_dotenv()
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Stores API"
     app.config["API_VERSION"] = "v1"
